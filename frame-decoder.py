@@ -1,8 +1,6 @@
 from prettytable import PrettyTable
 from pprint import pprint
 
-
-
 def addframe():
 	global row
 	global Codes
@@ -53,14 +51,17 @@ def extractData():
 			'SourcePort' : int(''.join(row[2][2:4]),16), # Convert From Hex2Decimal
 			'DestPort' : int(''.join(row[2][4:6]),16)	 # Convert From Hex2Decimal
 		}
-		return ExtratedDataIPV4
+		outtable = PrettyTable()
+		outtable.field_names = ['DestinationMac@','SourceMac@','FrameType','ProtocolType','SourceIP','DestinationIP','SourcePort','DestPort']
+		outtable.add_row([ExtratedDataIPV4["DestMac"],ExtratedDataIPV4["SourceMac"],ExtratedDataIPV4["FrameType"],ExtratedDataIPV4["ProtoType"],ExtratedDataIPV4["SourceIP"],ExtratedDataIPV4["DestIP"],ExtratedDataIPV4["SourcePort"],ExtratedDataIPV4["DestPort"]])
+		return outtable
 	else :
 		return False
 
 
 
 addframe()
-cmd = input(':>')
+cmd = input(':>').strip()
 while cmd != 'exit':
 	if frame and cmd == "table" : 
 		print(FrameTable())
@@ -72,11 +73,11 @@ while cmd != 'exit':
 		if Data == False: 
 			print(f"{Codes[''.join(row[0][12:14])]} FrameType is comming Soon :)")
 		else: 
-			pprint(Data)
+			print(Data)
 	elif cmd == 'add' :
 		addframe()
 	elif cmd == '':
-		cmd = input(':>')
+		cmd = input(':>').strip()
 	else : 
-		print('use :\n\tadd : to add a new frame\n\ttable : to view frame in pretty way\n\tdecode : to decode the frame')
-	cmd = input(':>')
+		print('use :\n\tadd : to add a new frame\n\ttable : to view frame in pretty way\n\tdecode : to decode the frame\n\texit : to exit')
+	cmd = input(':>').strip()
