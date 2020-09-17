@@ -1,16 +1,22 @@
 from prettytable import PrettyTable
 from pprint import pprint
 
-Codes = {'0800':'IPV4','86dd':'IPV6','0806':'ARP','06':'TCP','11':'UDP'}
-frame = '984827225faa00262d969994080045000029209f400080060000c0a80165acd91224d86801bb2da4675fc7d65ab050103f608126000000'
-prettyframe =  [frame[i:i+2] for i in range(0, len(frame), 2)]
-n = 16
-row = [prettyframe[i:i+n] for i in range(0, len(prettyframe), n)]
 
-for r in row : 
-	if len(r) < 15 :
-		while len(r) < 16 :
-			r.append('')
+
+def addframe():
+	global row
+	global Codes
+	global frame
+	global prettyframe
+	Codes = {'0800':'IPV4','86dd':'IPV6','0806':'ARP','06':'TCP','11':'UDP'}
+	frame = input(':frame>')
+	prettyframe =  [frame[i:i+2] for i in range(0, len(frame), 2)]
+	n = 16
+	row = [prettyframe[i:i+n] for i in range(0, len(prettyframe), n)]
+	for r in row : 
+		if len(r) < 15 :
+			while len(r) < 16 :
+				r.append('')
 
 def FrameTable():
 	x = PrettyTable()
@@ -50,10 +56,27 @@ def extractData():
 		return ExtratedDataIPV4
 	else :
 		return False
-Table = FrameTable()
 
-Data = extractData()
-if Data == False: 
-	print(f"{Codes[''.join(row[0][12:14])]} FrameType is comming Soon :)")
-else: 
-	pprint(Data)
+
+
+addframe()
+cmd = input(':>')
+while cmd != 'exit':
+	if frame and cmd == "table" : 
+		print(FrameTable())
+	elif not frame and cmd == 'get table'  :
+		print('you need to add a frame First')
+		addframe()
+	elif cmd == 'decode':
+		Data = extractData()
+		if Data == False: 
+			print(f"{Codes[''.join(row[0][12:14])]} FrameType is comming Soon :)")
+		else: 
+			pprint(Data)
+	elif cmd == 'add' :
+		addframe()
+	elif cmd == '':
+		cmd = input(':>')
+	else : 
+		print('use :\n\tadd : to add a new frame\n\ttable : to view frame in pretty way\n\tdecode : to decode the frame')
+	cmd = input(':>')
